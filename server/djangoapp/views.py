@@ -23,7 +23,6 @@ def about(request):
     if request.method == 'GET':
         return render(request, 'djangoapp/about.html', context)
 
-
 # Create a `contact` view to return a static contact page
 def contact(request):
     context = {}
@@ -32,16 +31,57 @@ def contact(request):
         return render(request, 'djangoapp/contact.html', context)
 
 # Create a `login_request` view to handle sign in request
-# def login_request(request):
-# ...
+def login_request(request):
+    context = {}
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['psw']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            print("user is not none")
+            login(request, user)
+            print("logged in")
+            return redirect('djangoapp:index')
+        else:
+            context['message'] = "Invalid username or password."
+            return render(request, 'djangoapp/user_login.html', context)
 
 # Create a `logout_request` view to handle sign out request
-# def logout_request(request):
-# ...
+def logout_request(request):
+    logout(request)
+    return redirect('djangoapp:index')
 
 # Create a `registration_request` view to handle sign up request
-# def registration_request(request):
-# ...
+def registration_request(request):
+    context = {}
+    if request.method == 'GET':
+        return render(request, 'djangoapp/registration.html', context)
+    elif request.method == 'POST':
+        # Check if user exists
+        username = request.POST['username']
+        password = request.POST['psw']
+        passwordconfirm = request.POST['pswconfirm']
+        first_name = request.POST['firstname']
+        last_name = request.POST['lastname']
+        user_exist = False
+        try:
+            User.objects.get(username=username)
+            user_exist = True
+        except:
+            logger.debug("{} is new user".format(username))
+        if not user_exist:
+            if password != passwordconfirm:
+                logger.warn("passwords don't match")
+                context['message'] = "Passwords don't match"
+                return render(request, 'djangoapp/registration.html', context)
+            else:
+                user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name,
+                                                password=password)
+                login(request, user)
+                return redirect("djangoapp:index")
+        else:
+            context['message'] = "User already exists."
+            return render(request, 'djangoapp/registration.html', context)
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):

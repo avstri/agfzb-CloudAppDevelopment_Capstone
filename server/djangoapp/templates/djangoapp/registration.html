@@ -5,7 +5,30 @@
     {% load static %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-    <body>
-    <!--Add a registration form here -->
-    </body>
+<body>
+    <form action="{% url 'djangoapp:register' %}" method="post">
+        {% csrf_token %}
+        <div class="container"> <!--Stylize root div with .container class -->
+            <h1>Sign Up</h1>
+            <div class="form-group"> <!--Stylize second div with .form-group class -->
+            <label for="username"><b>User Name: </b></label>
+            <input id="username" class="form-control" type="text" placeholder="Enter User Name: " name="username" required> <!--Stylize input with .form-control class -->
+            <label for="firstname"><b>First Name: </b></label>
+            <input id="firstname" class="form-control" type="text" placeholder="Enter First Name: " name="firstname" required> <!--Stylize input with .form-control class -->
+            <label for="lastname"><b>First Name: </b></label>
+            <input id="lastname" class="form-control" type="text" placeholder="Enter Last Name: " name="lastname" required> <!--Stylize input with .form-control class -->
+            <label for="psw"><b>Password: </b></label>
+            <input id="psw" type="password" class="form-control" placeholder="Enter Password: " name="psw" required> <!--Stylize input with .form-control class -->
+            <label for="pswconfirm"><b>Password: </b></label>
+            <input id="pswconfirm" type="password" class="form-control" placeholder="Confirm Password: " name="pswconfirm" required> <!--Stylize input with .form-control class -->
+            </div>
+            {% if message %}
+            <div class="alert alert-warning"> <!--Stylize the message paragraph with .alert and .alert-warning class -->
+                {{ message }}
+            </div>
+            {% endif %}
+            <button class="btn btn-primary" type="submit">Login</button> <!--Stylize button with .btn and .btn-primary class -->
+        </div>
+    </form>
+</body>
 </html>
