@@ -24,32 +24,29 @@ def main(param_dict):
             api_key=param_dict["IAM_API_KEY"],
             connect=True,
         )
-        
-        r=param_dict.get("review", None)
-        if r is None:
+
+        rev=param_dict.get("review", None)
+        if rev is None:
             return {"statusCode": 400, "body": "supply review object"}
-            
+
         doc = {
-            "id": r["id"],
-            "name": r["name"],
-            "dealership": r["dealership"],
-            "review": r["review"],
-            "purchase": r["purchase"],
-            "another": r["another"],
-            "purchase_date": r["purchase_date"],
-            "car_make": r["car_make"],
-            "car_model": r["car_model"],
-            "car_year": r["car_year"]
+            "id": rev["id"],
+            "name": rev["name"],
+            "dealership": rev["dealership"],
+            "review": rev["review"],
+            "purchase": rev["purchase"],
+            "another": rev["another"],
+            "purchase_date": rev["purchase_date"],
+            "car_make": rev["car_make"],
+            "car_model": rev["car_model"],
+            "car_year": rev["car_year"]
         }
-        
+
         my_database = client['reviews']
-        ret = my_database.create_document(r)
+        ret = my_database.create_document(doc)
         if len(ret)==0:
             return {"statusCode":404, "body": "Unable to locate reviews for the dealer"}
-        else:
-            return {"reviews": ret}
-            
-        print(f"Databases: {ret}")
+        return {"reviews": ret}
     except CloudantException as cloudant_exception:
         print("unable to connect")
         return {"statusCode": 500, "body": cloudant_exception}

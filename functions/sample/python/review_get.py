@@ -24,25 +24,18 @@ def main(param_dict):
             api_key=param_dict["IAM_API_KEY"],
             connect=True,
         )
-        
-        dealerId=param_dict.get("dealerId", None)
+
+        dealer_id=param_dict.get("dealerId", None)
         my_database = client['reviews']
-        if dealerId is not None:
-            ret = my_database.get_query_result({"dealership":dealerId})[:]
+        if dealer_id is not None:
+            ret = my_database.get_query_result({"dealership":dealer_id})[:]
             if len(ret)==0:
                 return {"statusCode":404, "body": "Unable to locate reviews for the dealer"}
-            else:
-                return {"reviews": ret}
-        else:
-            rows = my_database.all_docs(include_docs=True, limit=100)["rows"]
-            ret = [r["doc"] for r in rows]
             return {"reviews": ret}
-            if len(ret)==0:
-                return {"statusCode":404, "body": "Database is empty"}
-            else:
-                return {"reviews": ret}
-            
-        print(f"Databases: {ret}")
+
+        rows = my_database.all_docs(include_docs=True, limit=100)["rows"]
+        ret = [r["doc"] for r in rows]
+        return {"reviews": ret}
     except CloudantException as cloudant_exception:
         print("unable to connect")
         return {"statusCode": 500, "error": cloudant_exception}
