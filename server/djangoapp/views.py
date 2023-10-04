@@ -116,12 +116,26 @@ def get_dealer_details(request, dealer_id):
 
 # Create a `add_review` view to submit a review
 def add_review(request, dealer_id):
-    review = {}
-    review["time"] = datetime.utcnow().isoformat()
-    #review["name"] = f"{user.first_name} {user.last_name}"
-    review["dealership"] = 11
-    review["review"] = "This is a great car dealer"
-    review["purchase"] = ""
-    url = "https://us-east.functions.appdomain.cloud/api/v1/web/683c092f-ee24-42f9-8048-b08ab7583220/dealership-package/reviewPost"
-    response = post_request(url,review)
-    print (response)
+    if not request.user.is_authenticated:
+        redirect(login)
+        return
+
+    context = {"dealer_id": int(dealer_id)}
+    if request.method == 'GET':
+        return render(request, 'djangoapp/add_review.html', context)
+    elif request.method == 'POST':
+        url = "https://us-east.functions.appdomain.cloud/api/v1/web/683c092f-ee24-42f9-8048-b08ab7583220/dealership-package/reviewPost.json"
+        review_text = request.POST['review']
+        review = {}
+        review["name"] = f"{request.user.first_name} {request.user.last_name}"
+        review["dealership"] = int(dealer_id)
+        review["review"] = review_text
+        review["purchase"] = request.POST['purchase']
+        review["car_make"] = request.POST['car_make']
+        review["car_model"] = request.POST['car_model']
+        review["car_year"] = request.POST['car_year']
+        review["id"] = 1
+        review["purchase_date"] = datetime.utcnow().isoformat()
+        response = post_request(url,{"review":review})
+        print(f"post review response {response}")
+        return redirect("djangoapp:dealer_details",dealer_id = int(dealer_id))

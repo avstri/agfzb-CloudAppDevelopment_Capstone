@@ -55,7 +55,8 @@ def get_dealer_reviews_from_cf(url, **kwargs):
                                    review=review["review"], purchase_date=review["purchase_date"],
                                    car_make=review["car_make"],
                                    car_model=review["car_model"],
-                                   car_year=review["car_year"], id=review["id"])
+                                   car_year=review["car_year"],
+                                   id=review["id"])
             r_obj.sentiment = analyze_review_sentiments(r_obj.review)
             results.append(r_obj)
 
@@ -84,6 +85,7 @@ def post_request(url, json_payload, **kwargs):
         # If any error occurs
         print("Network exception occurred")
     status_code = response.status_code
-    print(f"With status {status_code} ")
+    print(f"With status {status_code} {response.text}")
     json_data = json.loads(response.text)
+    print(f"json {json_data}")
     return json_data

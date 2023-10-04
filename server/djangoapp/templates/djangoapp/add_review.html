@@ -10,7 +10,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
 
 </head>
-    <body>
-    <!--Add review form here -->
-    </body>
+<body>
+    <form action="{% url 'djangoapp:add_review' dealer_id=dealer_id %}" method="post">
+        {% csrf_token %}
+        <div class="container"> <!--Stylize root div with .container class -->
+            <h1>Add Review</h1>
+            <div class="form-group"> <!--Stylize second div with .form-group class -->
+                <label for="review"><b>Review: </b></label>
+                <input id="review" class="form-control" type="text" placeholder="type your review here: " name="review" required> <!--Stylize input with .form-control class -->
+                <label for="purchase"><b>Purchase: </b></label>
+                <input id="purchase" class="form-control" type="checkbox" placeholder="Enter First Name: " name="purchase"> <!--Stylize input with .form-control class -->
+                <label for="car_make"><b>Make: </b></label>
+                <input id="car_make" class="form-control" type="text" placeholder="car_make: " name="car_make" required> <!--Stylize input with .form-control class -->
+                <label for="car_model"><b>Model: </b></label>
+                <input id="car_model" class="form-control" type="text" placeholder="car model: " name="car_model" required> <!--Stylize input with .form-control class -->
+                <label for="car_year"><b>Year: </b></label>
+                <input id="car_year" class="form-control" type="number" placeholder="year: " name="car_year" required> <!--Stylize input with .form-control class -->
+            </div>
+            {% if message %}
+            <div class="alert alert-warning"> <!--Stylize the message paragraph with .alert and .alert-warning class -->
+                {{ message }}
+            </div>
+            {% endif %}
+            <button class="btn btn-primary" type="submit">Submit</button> <!--Stylize button with .btn and .btn-primary class -->
+        </div>
+    </form>
+</body>
 </html>
