@@ -1,15 +1,19 @@
 import requests
 import json
+from os import getenv
 from .models import CarDealer, DealerReview
 from requests.auth import HTTPBasicAuth
 
-def get_request(url, **kwargs):
+def get_request(url, api_key, **kwargs):
     print(kwargs)
     print(f"GET from {url} ")
     try:
         # Call get method of requests library with URL and parameters
-        response = requests.get(url, headers={'Content-Type': 'application/json'},
-                                    params=kwargs)
+        if api_key:
+            response = requests.get(url, params=kwargs, headers={'Content-Type': 'application/json'},
+                                    auth=HTTPBasicAuth('apikey', api_key))
+        else:
+            response = requests.get(url, params=kwargs, headers={'Content-Type': 'application/json'})
     except:
         # If any error occurs
         print("Network exception occurred")
@@ -21,7 +25,7 @@ def get_request(url, **kwargs):
 def get_dealers_from_cf(url, **kwargs):
     results = []
     # Call get_request with a URL parameter
-    json_result = get_request(url, **kwargs)
+    json_result = get_request(url, api_key=None, **kwargs)
     if json_result:
         # Get the row list in JSON as dealers
         dealers = json_result["dealerships"]
@@ -39,7 +43,7 @@ def get_dealers_from_cf(url, **kwargs):
     return results
 
 def get_dealer_reviews_from_cf(url, **kwargs):
-    json_result = get_request(url, **kwargs)
+    json_result = get_request(url, api_key=None, **kwargs)
     results = []
     if json_result:
         # Get the row list in JSON as dealers
@@ -53,6 +57,22 @@ def get_dealer_reviews_from_cf(url, **kwargs):
                                    car_make=review["car_make"],
                                    car_model=review["car_model"],
                                    car_year=review["car_year"], id=review["id"])
+            r_obj.sentiment = analyze_review_sentiments(r_obj.review)
             results.append(r_obj)
 
     return results
+
+def analyze_review_sentiments(dealerreview):
+    params = dict()
+    url = "https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/703b9877-bedf-4c8c-a78e-a4ad490e5545"
+    api_key = getenv('NLU_API_KEY')
+    params["text"] = dealerreview.review
+    # params["version"] = kwargs["version"]
+    # params["features"] = kwargs["features"]
+    # params["return_analyzed_text"] = dealerreview.review
+    response = get_request(url, api_key, **params)
+    if response.status_code == 200:
+        f_response = json.loads(response.text)
+        label = f_response['documentSentiment']['label']
+        return label
+    return None

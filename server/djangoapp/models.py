@@ -77,6 +77,7 @@ class DealerReview(models.Model):
         self.car_model = car_model
         self.car_year = car_year
         self.id = id
+        self.sentiment = None
 
     def __str__(self):
         return f"Dealer rewview: {self.name}"
