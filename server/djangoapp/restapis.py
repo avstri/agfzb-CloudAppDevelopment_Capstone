@@ -5,7 +5,6 @@ from .models import CarDealer, DealerReview
 from requests.auth import HTTPBasicAuth
 
 def get_request(url, api_key, **kwargs):
-    print(kwargs)
     print(f"GET from {url} ")
     try:
         # Call get method of requests library with URL and parameters
@@ -64,15 +63,27 @@ def get_dealer_reviews_from_cf(url, **kwargs):
 
 def analyze_review_sentiments(dealerreview):
     params = dict()
-    url = "https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/703b9877-bedf-4c8c-a78e-a4ad490e5545"
+    url = "https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/703b9877-bedf-4c8c-a78e-a4ad490e5545/v1/analyze"
     api_key = getenv('NLU_API_KEY')
-    params["text"] = dealerreview.review
-    # params["version"] = kwargs["version"]
-    # params["features"] = kwargs["features"]
+    params["text"] = dealerreview
+    params["version"] = "2022-04-07"
+    params["features"] = {"sentiment":{}}
+    params["language"] = "en"
     # params["return_analyzed_text"] = dealerreview.review
     response = get_request(url, api_key, **params)
-    if response.status_code == 200:
-        f_response = json.loads(response.text)
-        label = f_response['documentSentiment']['label']
-        return label
-    return None
+    if "sentiment" in response:
+        return response['sentiment']['document']['label']
+    return ""
+
+def post_request(url, json_payload, **kwargs):
+    try:
+        # Call get method of requests library with URL and parameters
+        response = requests.post(url, params=kwargs, headers={'Content-Type': 'application/json'},
+            json=json_payload)
+    except:
+        # If any error occurs
+        print("Network exception occurred")
+    status_code = response.status_code
+    print(f"With status {status_code} ")
+    json_data = json.loads(response.text)
+    return json_data

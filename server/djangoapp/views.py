@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import CarDealer, CarMake, CarModel
-from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf
+from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -115,6 +115,13 @@ def get_dealer_details(request, dealer_id):
         return HttpResponse(dealer_names)
 
 # Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
-
+def add_review(request, dealer_id):
+    review = {}
+    review["time"] = datetime.utcnow().isoformat()
+    #review["name"] = f"{user.first_name} {user.last_name}"
+    review["dealership"] = 11
+    review["review"] = "This is a great car dealer"
+    review["purchase"] = ""
+    url = "https://us-east.functions.appdomain.cloud/api/v1/web/683c092f-ee24-42f9-8048-b08ab7583220/dealership-package/reviewPost"
+    response = post_request(url,review)
+    print (response)
