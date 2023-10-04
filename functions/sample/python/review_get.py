@@ -28,7 +28,7 @@ def main(param_dict):
         dealer_id=param_dict.get("dealerId", None)
         my_database = client['reviews']
         if dealer_id is not None:
-            ret = my_database.get_query_result({"dealership":dealer_id})[:]
+            ret = my_database.get_query_result({'dealership' : int(dealer_id)})[:]
             if len(ret)==0:
                 return {"statusCode":404, "body": "Unable to locate reviews for the dealer"}
             return {"reviews": ret}
