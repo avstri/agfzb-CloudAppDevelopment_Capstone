@@ -35,6 +35,8 @@ async function main(params) {
           zip: o["zip"],
           lat: o["lat"],
           long: o["long"],
+          short_name: o["short_name"],
+          full_name: o["full_name"]
         }});
         return {dealerships: lst};
       } catch (error) {
