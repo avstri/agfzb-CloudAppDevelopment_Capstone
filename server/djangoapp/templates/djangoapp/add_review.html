@@ -17,15 +17,17 @@
             <h1>Add Review</h1>
             <div class="form-group"> <!--Stylize second div with .form-group class -->
                 <label for="review"><b>Review: </b></label>
-                <input id="review" class="form-control" type="text" placeholder="type your review here: " name="review" required> <!--Stylize input with .form-control class -->
-                <label for="purchase"><b>Purchase: </b></label>
-                <input id="purchase" class="form-control" type="checkbox" placeholder="Enter First Name: " name="purchase"> <!--Stylize input with .form-control class -->
-                <label for="car_make"><b>Make: </b></label>
-                <input id="car_make" class="form-control" type="text" placeholder="car_make: " name="car_make" required> <!--Stylize input with .form-control class -->
-                <label for="car_model"><b>Model: </b></label>
-                <input id="car_model" class="form-control" type="text" placeholder="car model: " name="car_model" required> <!--Stylize input with .form-control class -->
-                <label for="car_year"><b>Year: </b></label>
-                <input id="car_year" class="form-control" type="number" placeholder="year: " name="car_year" required> <!--Stylize input with .form-control class -->
+                <textarea class="form-control" id="content" name="review" rows="2" required placeholder="type your review here: "></textarea>
+                
+                <input id="purchase" class="form-check-input" type="checkbox" name="purchase"><b>Purchase</b></input>
+                <br>
+                <label for="car_make"><b>Select your car (model-make-year): </b></label>
+                <select name="car" id="car" class="form-select" required>
+                    {% for car in cars %}
+                        <option selected value={{car.id}}>{{car.name}}-{{car.make.name}}-{{ car.year|date:"Y" }}</option>
+                    {% endfor %}
+               </select>
+               <input class="date-own form-control" type="text" name="purchasedate" id="purchasedate">
             </div>
             {% if message %}
             <div class="alert alert-warning"> <!--Stylize the message paragraph with .alert and .alert-warning class -->
@@ -36,4 +38,9 @@
         </div>
     </form>
 </body>
+<script type="text/javascript">
+    $('.date-own').datepicker({
+       format: 'mm/dd/yyyy'
+     });
+</script>
 </html>

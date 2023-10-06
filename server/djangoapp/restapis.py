@@ -44,7 +44,7 @@ def get_dealers_from_cf(url, **kwargs):
 def get_dealer_reviews_from_cf(url, **kwargs):
     json_result = get_request(url, api_key=None, **kwargs)
     results = []
-    if json_result:
+    if json_result and "reviews" in json_result:
         # Get the row list in JSON as dealers
         reviews = json_result["reviews"]
         # For each dealer object
@@ -59,7 +59,6 @@ def get_dealer_reviews_from_cf(url, **kwargs):
                                    id=review["id"])
             r_obj.sentiment = analyze_review_sentiments(r_obj.review)
             results.append(r_obj)
-
     return results
 
 def analyze_review_sentiments(dealerreview):
