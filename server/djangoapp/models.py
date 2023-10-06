@@ -34,7 +34,7 @@ class CarModel(models.Model):
         max_length=20,
         choices = CAR_TYPE_CHOICES,
         default = SEDAN)
-    year = models.DateField(null = False)
+    year = models.IntegerField(null = False)
     dealerId = models.IntegerField(null = True)
 
     def __str__(self):

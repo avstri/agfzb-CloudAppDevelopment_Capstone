@@ -24,10 +24,12 @@
                 <label for="car_make"><b>Select your car (model-make-year): </b></label>
                 <select name="car" id="car" class="form-select" required>
                     {% for car in cars %}
-                        <option selected value={{car.id}}>{{car.name}}-{{car.make.name}}-{{ car.year|date:"Y" }}</option>
+                        <option selected value={{car.id}}>{{car.name}}-{{car.make.name}}-{{ car.year }}</option>
                     {% endfor %}
                </select>
-               <input class="date-own form-control" type="text" name="purchasedate" id="purchasedate">
+               <br>
+               <label for="purchase_date"><b>Date Purchased: </b></label>
+               <input class="date-own form-control" type="text" name="purchase_date" id="purchase_date" />
             </div>
             {% if message %}
             <div class="alert alert-warning"> <!--Stylize the message paragraph with .alert and .alert-warning class -->

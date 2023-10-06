@@ -78,11 +78,10 @@ def analyze_review_sentiments(dealerreview):
 def post_request(url, json_payload, **kwargs):
     try:
         # Call get method of requests library with URL and parameters
-        response = requests.post(url, params=kwargs, headers={'Content-Type': 'application/json'},
-            json=json_payload)
-    except:
+        response = requests.post(url,headers={'Content-Type': 'application/json'},json=json_payload)
+    except BaseException as e:
         # If any error occurs
-        print("Network exception occurred")
+        print(f"Network exception occurred {e}")
     status_code = response.status_code
     print(f"With status {status_code} {response.text}")
     json_data = json.loads(response.text)
